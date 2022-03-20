@@ -8,6 +8,8 @@
     {% endfor %}
 
     <h1>Register</h1>
+    {# this tag only applies to the forms defined in this template #}
+{% form_theme registrationForm 'bootstrap_5_layout.html.twig' %}
 
     {{ form_start(registrationForm) }}
         {{ form_row(registrationForm.email) }}

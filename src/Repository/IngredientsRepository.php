@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @method Ingredients|null find($id, $lockMode = null, $lockVersion = null)
@@ -46,31 +47,38 @@ class IngredientsRepository extends ServiceEntityRepository
     }
 
     // /**
-    //  * @return Ingredients[] Returns an array of Ingredients objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('i.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    // * @return Ingredients[] Returns an array of Ingredients objects
+    // */
+    
+    // public function findByUsers()
+    // {
+    //     return $this->createQueryBuilder('i')
+    //         ->andWhere('i.users = :val')
+    //         ->setParameter('val',  $this->getUser())
+    //         // ->orderBy('i.id', 'ASC')
+    //         // ->setMaxResults(10)
+    //         ->getQuery()
+    //         ->getResult()
+    //     ;
+    // }
 
-    /*
-    public function findOneBySomeField($value): ?Ingredients
-    {
-        return $this->createQueryBuilder('i')
-            ->andWhere('i.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+    // public function findOneBySomeField($value): ?Ingredients
+    // {
+    //     return $this->createQueryBuilder('i')
+    //         ->andWhere('i.exampleField = :val')
+    //         ->setParameter('val', $value)
+    //         ->getQuery()
+    //         ->getOneOrNullResult()
+    //     ;
+    // }
+  
+
+    // public function getLinkedUser(Request $request)
+    // {
+    //     $user = $request->getUser();
+    //     return $this->_em->createQuery('SELECT u WHERE u.users = $user ' )
+    //                      ->getResult();
+    // }
+
+
 }

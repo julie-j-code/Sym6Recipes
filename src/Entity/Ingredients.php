@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\IngredientsRepository;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -28,12 +30,16 @@ class Ingredients
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
+    #[ORM\ManyToMany(targetEntity: Users::class, mappedBy: 'ingredients')]
+    private $users;
+
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->users = new ArrayCollection();
     }
 
 
@@ -76,5 +82,37 @@ class Ingredients
         $this->createdAt = $createdAt;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Users>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(Users $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->addIngredient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(Users $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeIngredient($this);
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->users;
     }
 }

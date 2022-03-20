@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UsersRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -28,6 +30,14 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
+
+    #[ORM\ManyToMany(targetEntity: Ingredients::class, inversedBy: 'users')]
+    private $ingredients;
+
+    public function __construct()
+    {
+        $this->ingredients = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -75,6 +85,8 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+
+
     /**
      * @see PasswordAuthenticatedUserInterface
      */
@@ -110,4 +122,34 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection<int, Ingredients>
+     */
+    public function getIngredients(): Collection
+    {
+        return $this->ingredients;
+    }
+
+    public function addIngredient(Ingredients $ingredient): self
+    {
+        if (!$this->ingredients->contains($ingredient)) {
+            $this->ingredients[] = $ingredient;
+        }
+
+        return $this;
+    }
+
+    public function removeIngredient(Ingredients $ingredient): self
+    {
+        $this->ingredients->removeElement($ingredient);
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->ingredients;
+    }
+
 }
