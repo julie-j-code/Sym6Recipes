@@ -31,13 +31,21 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
-    #[ORM\ManyToMany(targetEntity: Ingredients::class, inversedBy: 'users')]
-    private $ingredients;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Recipes::class, orphanRemoval: true)]
+    private $recipes;
 
     public function __construct()
     {
-        $this->ingredients = new ArrayCollection();
+        $this->recipes = new ArrayCollection();
     }
+
+    // #[ORM\ManyToMany(targetEntity: Ingredients::class, inversedBy: 'users')]
+    // private $ingredients;
+
+    // public function __construct()
+    // {
+    //     $this->ingredients = new ArrayCollection();
+    // }
 
     public function getId(): ?int
     {
@@ -123,33 +131,63 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    // /**
+    //  * @return Collection<int, Ingredients>
+    //  */
+    // public function getIngredients(): Collection
+    // {
+    //     return $this->ingredients;
+    // }
+
+    // public function addIngredient(Ingredients $ingredient): self
+    // {
+    //     if (!$this->ingredients->contains($ingredient)) {
+    //         $this->ingredients[] = $ingredient;
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeIngredient(Ingredients $ingredient): self
+    // {
+    //     $this->ingredients->removeElement($ingredient);
+
+    //     return $this;
+    // }
+
+    // public function __toString()
+    // {
+    //     return $this->ingredients;
+    // }
+
     /**
-     * @return Collection<int, Ingredients>
+     * @return Collection<int, Recipes>
      */
-    public function getIngredients(): Collection
+    public function getRecipes(): Collection
     {
-        return $this->ingredients;
+        return $this->recipes;
     }
 
-    public function addIngredient(Ingredients $ingredient): self
+    public function addRecipe(Recipes $recipe): self
     {
-        if (!$this->ingredients->contains($ingredient)) {
-            $this->ingredients[] = $ingredient;
+        if (!$this->recipes->contains($recipe)) {
+            $this->recipes[] = $recipe;
+            $recipe->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeIngredient(Ingredients $ingredient): self
+    public function removeRecipe(Recipes $recipe): self
     {
-        $this->ingredients->removeElement($ingredient);
+        if ($this->recipes->removeElement($recipe)) {
+            // set the owning side to null (unless already changed)
+            if ($recipe->getUser() === $this) {
+                $recipe->setUser(null);
+            }
+        }
 
         return $this;
-    }
-
-    public function __toString()
-    {
-        return $this->ingredients;
     }
 
 }

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recipes index{% endblock %}
+
+{% block body %}
+    <h1>Recipes index</h1>
+
+    <table class="table mt-5">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Time</th>
+                <th>NbPeople</th>
+                <th>Difficulty</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>IsFavorite</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for recipe in recipes %}
+            <tr>
+                <td>{{ recipe.id }}</td>
+                <td>{{ recipe.name }}</td>
+                <td>{{ recipe.time }}</td>
+                <td>{{ recipe.nbPeople }}</td>
+                <td>{{ recipe.difficulty }}</td>
+                <td>{{ recipe.description }}</td>
+                <td>{{ recipe.price }}</td>
+                <td>{{ recipe.createdAt ? recipe.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ recipe.updatedAt ? recipe.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ recipe.isFavorite ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('recipes_show', {'id': recipe.id}) }}">show</a>
+                    <a href="{{ path('recipes_edit', {'id': recipe.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('recipes_new') }}">Create new</a>
+{% endblock %}

@@ -5,7 +5,8 @@
 {% block body %}
 
 
-<h1>{{ controller_name }}! ✅</h1>
+<h1>{{ controller_name }} pour l'utilisateur {{app.user.id}}! ✅</h1>
+L'utilisateur {{app.user.id}} est associé à l'entité ingredients par une relation manyToMany...
 
 <table class="table table-hover mt-5">
     <thead>
@@ -14,14 +15,13 @@
             <th scope="col">Nom</th>
             <th scope="col">Prix</th>
             <th scope="col">Date de création</th>
-            {# <th scope="col">Utilisateur </th> #}
-
+            <th scope="col">Utilisateur </th>
 
         </tr>
     </thead>
     <tbody>
 
-        {% for ingredient in ingredients %}
+        {% for ingredient in app.user.getIngredients() %}
 
         <tr class="table-primary">
             <th scope="row">{{ ingredient.id }}</th>
@@ -29,14 +29,15 @@
             <td>{{ ingredient.price|number_format(2, '.', ',') }}
                 €</td>
             <td>{{ ingredient.createdAt|date('d/m/Y') }}</td>
-            {# <td>
-                {% for u in ingredient.users %}
+            <td>
+                {# {% for u in ingredient.users %}
                 {{ u.id}}
 
-                {% endfor %}
-            </td> #}
+                {% endfor %} #}
+            </td>
 
         </tr>
+        {# {% endif %} #}
         {% endfor %}
 
 

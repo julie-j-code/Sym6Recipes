@@ -30,8 +30,11 @@ class Ingredients
     #[ORM\Column(type: 'datetime_immutable')]
     private $createdAt;
 
-    #[ORM\ManyToMany(targetEntity: Users::class, mappedBy: 'ingredients')]
-    private $users;
+    // #[ORM\ManyToMany(targetEntity: Users::class, mappedBy: 'ingredients')]
+    // private $users;
+
+    #[ORM\ManyToMany(targetEntity: Recipes::class, mappedBy: 'ingredients')]
+    private $recipes;
 
     /**
      * Constructor
@@ -39,7 +42,8 @@ class Ingredients
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
-        $this->users = new ArrayCollection();
+        // $this->users = new ArrayCollection();
+        $this->recipes = new ArrayCollection();
     }
 
 
@@ -84,35 +88,64 @@ class Ingredients
         return $this;
     }
 
+    // /**
+    //  * @return Collection<int, Users>
+    //  */
+    // public function getUsers(): Collection
+    // {
+    //     return $this->users;
+    // }
+
+    // public function addUser(Users $user): self
+    // {
+    //     if (!$this->users->contains($user)) {
+    //         $this->users[] = $user;
+    //         $user->addIngredient($this);
+    //     }
+
+    //     return $this;
+    // }
+
+    // public function removeUser(Users $user): self
+    // {
+    //     if ($this->users->removeElement($user)) {
+    //         $user->removeIngredient($this);
+    //     }
+
+    //     return $this;
+    // }
+
     /**
-     * @return Collection<int, Users>
+     * @return Collection<int, Recipes>
      */
-    public function getUsers(): Collection
+    public function getRecipes(): Collection
     {
-        return $this->users;
+        return $this->recipes;
     }
 
-    public function addUser(Users $user): self
+    public function addRecipe(Recipes $recipe): self
     {
-        if (!$this->users->contains($user)) {
-            $this->users[] = $user;
-            $user->addIngredient($this);
+        if (!$this->recipes->contains($recipe)) {
+            $this->recipes[] = $recipe;
+            $recipe->addIngredient($this);
         }
 
         return $this;
     }
 
-    public function removeUser(Users $user): self
+    public function removeRecipe(Recipes $recipe): self
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeIngredient($this);
+        if ($this->recipes->removeElement($recipe)) {
+            $recipe->removeIngredient($this);
         }
 
         return $this;
     }
 
-    public function __toString()
-    {
-        return $this->users;
-    }
+    // public function __toString()
+    // {
+    //     return $this->recipes;
+    // }
+
+
 }
