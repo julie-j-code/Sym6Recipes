@@ -14,11 +14,13 @@
                 <th>NbPeople</th>
                 <th>Difficulty</th>
                 <th>Description</th>
+                <th>Ingredients</th>
                 <th>Price</th>
                 <th>CreatedAt</th>
                 <th>UpdatedAt</th>
                 <th>IsFavorite</th>
                 <th>actions</th>
+
             </tr>
         </thead>
         <tbody>
@@ -30,6 +32,21 @@
                 <td>{{ recipe.nbPeople }}</td>
                 <td>{{ recipe.difficulty }}</td>
                 <td>{{ recipe.description }}</td>
+                <td>
+{# {% for i in ingredients %}
+{% if i is same as recipe.ingredients %}
+{{i.name}}
+{% endif %}    
+{% endfor %} #}
+{% for i in recipe.ingredients %}
+
+{{i.name}}
+   
+{% endfor %}
+                                        
+
+
+                </td>
                 <td>{{ recipe.price }}</td>
                 <td>{{ recipe.createdAt ? recipe.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ recipe.updatedAt ? recipe.updatedAt|date('Y-m-d H:i:s') : '' }}</td>

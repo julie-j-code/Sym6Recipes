@@ -5,9 +5,9 @@
 {% block body %}
     <h1>Edit Recipes</h1>
 
-    {{ include('recipes/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ include('recipes/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
 
-    <a href="{{ path('app_recipes_index') }}">back to list</a>
+    <a href="{{ path('recipes_index') }}" class="btn btn-info mt-3">Retour à la liste</a>
 
     {{ include('recipes/_delete_form.html.twig') }}
 {% endblock %}

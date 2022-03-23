@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Recipes;
 use App\Form\RecipesType;
+use App\Repository\IngredientsRepository;
 use App\Repository\RecipesRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,9 +15,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class RecipesController extends AbstractController
 {
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(RecipesRepository $recipesRepository): Response
+    public function index(RecipesRepository $recipesRepository, IngredientsRepository $ingredientsRepository): Response
     {
+        
         return $this->render('recipes/index.html.twig', [
+            'ingredients' => $ingredientsRepository->findAll(),
             'recipes' => $recipesRepository->findAll(),
         ]);
     }
@@ -28,7 +31,11 @@ class RecipesController extends AbstractController
         $form = $this->createForm(RecipesType::class, $recipe);
         $form->handleRequest($request);
 
+
+
         if ($form->isSubmitted() && $form->isValid()) {
+            
+   
             $recipesRepository->add($recipe);
             return $this->redirectToRoute('recipes_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -55,7 +62,7 @@ class RecipesController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $recipesRepository->add($recipe);
-            return $this->redirectToRoute('index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('recipes_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('recipes/edit.html.twig', [

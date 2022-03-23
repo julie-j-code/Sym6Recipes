@@ -18,7 +18,6 @@ class AppFixtures extends Fixture
     // private Generator $faker;
     public function __construct(private UserPasswordHasherInterface $passwordEncoder)
     {
-        
     }
 
     public function load(ObjectManager $manager): void
@@ -42,45 +41,37 @@ class AppFixtures extends Fixture
 
 
 
-        for ($i = 0; $i < 49; $i++) {
-            $ingredients = [];
+// Ingredients
+$ingredients = [];
+for ($i = 0; $i < 50; $i++) {
+    $ingredient = new Ingredients();
+    $ingredient->setName($faker->word())
+        ->setPrice(mt_rand(0, 100));
 
-            // $faker = new Factory::create('fr_FR');
-            # code...
-            $ingredient = new Ingredients();
-            $ingredient->setName($faker->word())
-                ->setPrice(mt_rand(1, 199));
-                // $ingredient->addUser($users[mt_rand(0, count($users) - 1)]);
-                $ingredients[] = $ingredient;
-            $manager->persist($ingredient);
-        }
+    $ingredients[] = $ingredient;
+    $manager->persist($ingredient);
+}
 
-        // Recipes
-        $recipes = [];
-        for ($j = 0; $j < 25; $j++) {
-            $recipe = new Recipes();
-            $recipe->setName($faker->word())
-                ->setTime(mt_rand(0, 1) == 1 ? mt_rand(1, 1440) : null)
-                ->setNbPeople(mt_rand(0, 1) == 1 ? mt_rand(1, 50) : null)
-                ->setDifficulty(mt_rand(0, 1) == 1 ? mt_rand(1, 5) : null)
-                ->setDescription($faker->text(300))
-                ->setPrice(mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
-                ->setIsFavorite(mt_rand(0, 1) == 1 ? true : false)    
-                ->setUser($users[mt_rand(0, count($users) - 1)])
-                ;
+// Recipes
+for ($j = 0; $j < 25; $j++) {
+    $recipe = new Recipes();
+    $recipe->setName($faker->word())
+        ->setTime(mt_rand(0, 1) == 1 ? mt_rand(1, 1440) : null)
+        ->setNbPeople(mt_rand(0, 1) == 1 ? mt_rand(1, 50) : null)
+        ->setDifficulty(mt_rand(0, 1) == 1 ? mt_rand(1, 5) : null)
+        ->setDescription($faker->text(300))
+        ->setPrice(mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
+        ->setIsFavorite(mt_rand(0, 1) == 1 ? true : false)
+        ->setIsPublic(mt_rand(0,1) ==1 ? true : false)
+        ->setUser($users[mt_rand(0, count($users) - 1)]);
 
-            for ($k = 0; $k < mt_rand(5, 15); $k++) {
-                $recipe->addIngredient($ingredients[mt_rand(0, count($ingredients) - 1)]);
-            }
-
-            $recipes[] = $recipe;
-            $manager->persist($recipe);
-        }
-
-
-        
-
-
-        $manager->flush();
+    for ($k = 0; $k < mt_rand(5, 15); $k++) {
+        $recipe->addIngredient($ingredients[mt_rand(0, count($ingredients) - 1)]);
     }
+
+    $manager->persist($recipe);
+}
+
+$manager->flush();
+}
 }

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Recipes{% endblock %}
+{% block title %}{{recipe.name}}: détails{% endblock %}
 
 {% block body %}
     <h1>Recipes</h1>
@@ -33,7 +33,17 @@
             </tr>
             <tr>
                 <th>Price</th>
-                <td>{{ recipe.price }}</td>
+                <td>{% if recipe.price %}                    
+                    {{ recipe.price }}
+                    {% else %}
+                    {% set counter = 0 %}                    
+                    {% for ingredient in recipe.ingredients %}
+                    {{ingredient.name}} : {{ingredient.price}} €  <br> 
+                    {% set counter = counter + ingredient.price %}
+                    Coût minimal : {{counter}} €                        
+                    {% endfor %}
+                {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>CreatedAt</th>
@@ -50,9 +60,9 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_recipes_index') }}">back to list</a>
+    <a class="btn btn-info mt-3" href="{{ path('recipes_index') }}">back to list</a>
 
-    <a href="{{ path('app_recipes_edit', {'id': recipe.id}) }}">edit</a>
+    <a class="btn btn-info mt-3" href="{{ path('recipes_edit', {'id': recipe.id}) }}">edit</a>
 
     {{ include('recipes/_delete_form.html.twig') }}
 {% endblock %}

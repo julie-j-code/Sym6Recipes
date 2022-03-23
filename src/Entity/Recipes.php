@@ -39,11 +39,11 @@ class Recipes
     #[ORM\Column(type: 'datetime_immutable')]
     private $updatedAt;
 
-    // #[ORM\ManyToMany(targetEntity: Ingredients::class, inversedBy: 'recipes')]
-    // private $ingredients;
-
-    #[ORM\ManyToMany(targetEntity: Ingredients::class)]
+    #[ORM\ManyToMany(targetEntity: Ingredients::class, inversedBy: 'recipes')]
     private $ingredients;
+
+    // #[ORM\ManyToMany(targetEntity: Ingredients::class)]
+    // private $ingredients;
 
 
     #[ORM\Column(type: 'boolean', nullable: true)]
@@ -52,6 +52,9 @@ class Recipes
     #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isPublic;
 
     public function __construct()
     {
@@ -211,6 +214,18 @@ class Recipes
         public function setUser(?Users $user): self
         {
             $this->user = $user;
+
+            return $this;
+        }
+
+        public function getIsPublic(): ?bool
+        {
+            return $this->isPublic;
+        }
+
+        public function setIsPublic(bool $isPublic): self
+        {
+            $this->isPublic = $isPublic;
 
             return $this;
         }
