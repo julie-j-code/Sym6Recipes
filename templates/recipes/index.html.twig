@@ -3,7 +3,7 @@
 {% block title %}Recipes index{% endblock %}
 
 {% block body %}
-    <h1>Recipes index</h1>
+    <h1>{{controller_name}}</h1>
 
     <table class="table mt-5">
         <thead>
@@ -64,5 +64,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('recipes_new') }}">Create new</a>
+    <a class="btn btn-primary my-3" href="{{ path('recipes_new') }}">Create new</a>
 {% endblock %}

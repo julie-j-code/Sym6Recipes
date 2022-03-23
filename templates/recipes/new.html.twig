@@ -3,9 +3,9 @@
 {% block title %}New Recipes{% endblock %}
 
 {% block body %}
-    <h1>Create new Recipes</h1>
+    <h1>{{controller_name}}</h1>
 
     {{ include('recipes/_form.html.twig') }}
 
-    <a href="{{ path('recipes_index') }}">back to list</a>
+    <a class="btn btn-info my-3" href="{{ path('recipes_index') }}">back to list</a>
 {% endblock %}

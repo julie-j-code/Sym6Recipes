@@ -45,6 +45,24 @@ class RecipesRepository extends ServiceEntityRepository
         }
     }
 
+
+    /**
+     * @return Recipes[] Returns an array of Recipes objects
+     *
+     */
+
+
+    public function findPublicRecipes():array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.isPublic = :val')
+            ->setParameter('val', 1)
+            ->orderBy('r.id', 'ASC')
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Recipes[] Returns an array of Recipes objects
     //  */

@@ -6,6 +6,7 @@ use App\Entity\Recipes;
 use App\Form\RecipesType;
 use App\Repository\IngredientsRepository;
 use App\Repository\RecipesRepository;
+use Knp\Component\Pager\PaginatorInterface; // Nous appelons le bundle KNP Paginator
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,6 +22,27 @@ class RecipesController extends AbstractController
         return $this->render('recipes/index.html.twig', [
             'ingredients' => $ingredientsRepository->findAll(),
             'recipes' => $recipesRepository->findAll(),
+            'controller_name'=>"Ensemble des recettes enregistrées"
+        ]);
+    }
+
+    #[Route('/public', name: '_public', methods: ['GET'])]
+    public function indexPublic(RecipesRepository $recipesRepository, PaginatorInterface $paginator, Request $request): Response
+    {
+    
+        // $recipes=$recipesRepository->findByIsPublic('1');
+        $data=$recipesRepository->findPublicRecipes();
+
+        $recipes = $paginator->paginate(
+            $data, // Requête contenant les données à paginer (ici nos articles)
+            $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page
+            8 // Nombre de résultats par page
+        );
+
+        return $this->render('recipes/index_public.html.twig', [
+            'recipes' => $recipes,
+            'controller_name'=>"Recettes publiques"
+
         ]);
     }
 
@@ -43,6 +65,7 @@ class RecipesController extends AbstractController
         return $this->renderForm('recipes/new.html.twig', [
             'recipe' => $recipe,
             'form' => $form,
+            'controller_name'=>"Création d'une recette"
         ]);
     }
 
@@ -51,6 +74,7 @@ class RecipesController extends AbstractController
     {
         return $this->render('recipes/show.html.twig', [
             'recipe' => $recipe,
+            'controller_name'=>"Détail de la recette"
         ]);
     }
 
@@ -68,6 +92,7 @@ class RecipesController extends AbstractController
         return $this->renderForm('recipes/edit.html.twig', [
             'recipe' => $recipe,
             'form' => $form,
+            'controller_name'=>"Edition d'une recette"
         ]);
     }
 
