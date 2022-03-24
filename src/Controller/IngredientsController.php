@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ingredients;
 use App\Form\IngredientsType;
 use App\Repository\IngredientsRepository;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,10 +15,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class IngredientsController extends AbstractController
 {
     #[Route('/', name: 'index', methods: ['GET'])]
-    public function index(IngredientsRepository $ingredientsRepository): Response
+    public function index(IngredientsRepository $ingredientsRepository, PaginatorInterface $paginator, Request $request): Response
     {
+        $data= $ingredientsRepository->findAll();
+        
+        $ingredients = $paginator->paginate(
+            $data, // Requête contenant les données à paginer (ici nos articles)
+            $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page
+            10 // Nombre de résultats par page
+        );
+        
         return $this->render('ingredients/index.html.twig', [
-            'ingredients' => $ingredientsRepository->findAll(),
+            'ingredients' => $ingredients,
             'controller_name' => 'Liste des ingrédients'
         ]);
     }
