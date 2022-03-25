@@ -4,15 +4,21 @@ namespace App\Controller;
 
 use App\Entity\Recipes;
 use App\Form\RecipesType;
-use App\Repository\IngredientsRepository;
 use App\Repository\RecipesRepository;
-use Knp\Component\Pager\PaginatorInterface; // Nous appelons le bundle KNP Paginator
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\IngredientsRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Knp\Component\Pager\PaginatorInterface; // Nous appelons le bundle KNP Paginator
 
 #[Route('/recipes', name: 'recipes_')]
+#[IsGranted('ROLE_USER')]
 class RecipesController extends AbstractController
 {
     #[Route('/', name: 'index', methods: ['GET'])]
@@ -35,7 +41,7 @@ class RecipesController extends AbstractController
         ]);
     }
 
-    #[Route('/public', name: '_public', methods: ['GET'])]
+    #[Route('/public', name: 'public', methods: ['GET'])]
     public function indexPublic(RecipesRepository $recipesRepository, PaginatorInterface $paginator, Request $request): Response
     {
     
@@ -56,12 +62,12 @@ class RecipesController extends AbstractController
     }
 
     #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_USER')]
     public function new(Request $request, RecipesRepository $recipesRepository): Response
     {
         $recipe = new Recipes();
         $form = $this->createForm(RecipesType::class, $recipe);
         $form->handleRequest($request);
-
 
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -88,6 +94,7 @@ class RecipesController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
+    #[Security("is_granted('ROLE_USER') and user === recipe.getUser()")]
     public function edit(Request $request, Recipes $recipe, RecipesRepository $recipesRepository): Response
     {
         $form = $this->createForm(RecipesType::class, $recipe);
@@ -106,6 +113,7 @@ class RecipesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'delete', methods: ['POST'])]
+    #[Security("is_granted('ROLE_USER') and user === recipe.getUser()")]
     public function delete(Request $request, Recipes $recipe, RecipesRepository $recipesRepository): Response
     {
         if ($this->isCsrfTokenValid('delete'.$recipe->getId(), $request->request->get('_token'))) {
@@ -114,4 +122,46 @@ class RecipesController extends AbstractController
 
         return $this->redirectToRoute('recipes_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    #[Route('/{id}/addfavoris', name: 'add_favoris', methods: ['GET', 'POST'])]
+    public function addFavoris(Request $request, Recipes $recipe, ManagerRegistry $doctrine): Response
+    {
+
+        $user=$this->getUser();  
+        // dd($user);
+        $manager = $doctrine->getManager();
+        $recipe->addFavorite($user);
+            // $this->addFlash(
+            //    'success',
+            //    'la recette a bien été ajoutée au favoris'
+            // );
+            $manager->persist($recipe);
+            $manager->flush();
+            
+
+        // return $this->redirectToRoute('users_show_recipes');
+        return $this->redirectToRoute('recipes_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/removefavoris', name: 'remove_favoris', methods: ['GET', 'POST'])]
+    public function removeFavoris(Request $request, Recipes $recipe, ManagerRegistry $doctrine): Response
+    {
+
+        $user=$this->getUser();  
+        // dd($user);
+        $manager = $doctrine->getManager();
+        $recipe->removeFavorite($user);
+            // $this->addFlash(
+            //    'success',
+            //    'la recette a bien été supprimée'
+            // );
+            $manager->persist($recipe);
+            $manager->flush();
+            
+
+        return $this->redirectToRoute('users_show_favoris', [], Response::HTTP_SEE_OTHER);
+    }
+
+
 }

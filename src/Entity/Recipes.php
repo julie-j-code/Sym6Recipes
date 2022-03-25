@@ -46,8 +46,8 @@ class Recipes
     // private $ingredients;
 
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    private $isFavorite;
+    // #[ORM\Column(type: 'boolean', nullable: true)]
+    // private $isFavorite;
 
     #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]
@@ -56,11 +56,15 @@ class Recipes
     #[ORM\Column(type: 'boolean')]
     private $isPublic;
 
+    #[ORM\ManyToMany(targetEntity: Users::class, inversedBy: 'favorites')]
+    private $favorite;
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable;
         $this->updatedAt = new \DateTimeImmutable();
+        $this->favorite = new ArrayCollection();
 
     }
 
@@ -189,17 +193,17 @@ class Recipes
         return $this;
     }
 
-    public function getIsFavorite(): ?bool
-    {
-        return $this->isFavorite;
-    }
+    // public function getIsFavorite(): ?bool
+    // {
+    //     return $this->isFavorite;
+    // }
 
-    public function setIsFavorite(?bool $isFavorite): self
-    {
-        $this->isFavorite = $isFavorite;
+    // public function setIsFavorite(?bool $isFavorite): self
+    // {
+    //     $this->isFavorite = $isFavorite;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
         public function __toString()
     {
@@ -226,6 +230,30 @@ class Recipes
         public function setIsPublic(bool $isPublic): self
         {
             $this->isPublic = $isPublic;
+
+            return $this;
+        }
+
+        /**
+         * @return Collection<int, Users>
+         */
+        public function getFavorite(): Collection
+        {
+            return $this->favorite;
+        }
+
+        public function addFavorite(Users $favorite): self
+        {
+            if (!$this->favorite->contains($favorite)) {
+                $this->favorite[] = $favorite;
+            }
+
+            return $this;
+        }
+
+        public function removeFavorite(Users $favorite): self
+        {
+            $this->favorite->removeElement($favorite);
 
             return $this;
         }

@@ -43,7 +43,7 @@ class RecipesType extends AbstractType
 )
             // ->add('createdAt')
             // ->add('updatedAt')
-            ->add('isFavorite')
+            // ->add('isFavorite')
             ->add('ingredients', EntityType::class, [
                 'class' => Ingredients::class,
                 'multiple' => true,

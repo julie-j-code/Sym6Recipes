@@ -22,7 +22,39 @@
             {# <li class="list-group-item">Difficulté :{{recipe.difficulty}}</li> #}
         </ul>
         <div class="card-footer text-muted">
-            <a href="{{ path('recipes_show', {id: recipe.id}) }}">Voir les détails</a>
+            <a class="card-link" href="{{ path('recipes_show', {id: recipe.id}) }}">Détails</a>
+
+
+            {# {% for u in recipe.favorite %}
+            {% if app.user.id is same as(u.id) %}
+            En favoris
+            {% endif %}
+            {% endfor %} #}
+            <a class="
+            {% for u in recipe.favorite %}
+            {% if app.user.id is same as(u.id) %}
+            d-none
+            {% endif %}
+            {% endfor %}
+            card-link" href="{{ path('recipes_add_favoris', {id: recipe.id}) }} ">
+
+                Sauvegarder en favoris</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         </div>
 
     </div>

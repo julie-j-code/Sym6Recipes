@@ -34,9 +34,13 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Recipes::class, orphanRemoval: true)]
     private $recipes;
 
+    #[ORM\ManyToMany(targetEntity: Recipes::class, mappedBy: 'favorite')]
+    private $favorites;
+
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
+        $this->favorites = new ArrayCollection();
     }
 
     // #[ORM\ManyToMany(targetEntity: Ingredients::class, inversedBy: 'users')]
@@ -185,6 +189,33 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
             if ($recipe->getUser() === $this) {
                 $recipe->setUser(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recipes>
+     */
+    public function getFavorites(): Collection
+    {
+        return $this->favorites;
+    }
+
+    public function addFavorite(Recipes $favorite): self
+    {
+        if (!$this->favorites->contains($favorite)) {
+            $this->favorites[] = $favorite;
+            $favorite->addFavorite($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFavorite(Recipes $favorite): self
+    {
+        if ($this->favorites->removeElement($favorite)) {
+            $favorite->removeFavorite($this);
         }
 
         return $this;
