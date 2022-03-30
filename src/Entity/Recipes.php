@@ -59,12 +59,19 @@ class Recipes
     #[ORM\ManyToMany(targetEntity: Users::class, inversedBy: 'favorites')]
     private $favorite;
 
+    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Marks::class, orphanRemoval: true)]
+    private $marks;
+
+    private float $average;
+
+
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable;
         $this->updatedAt = new \DateTimeImmutable();
         $this->favorite = new ArrayCollection();
+        $this->marks = new ArrayCollection();
 
     }
 
@@ -257,5 +264,57 @@ class Recipes
 
             return $this;
         }
+
+        /**
+         * @return Collection<int, Marks>
+         */
+        public function getMarks(): Collection
+        {
+            return $this->marks;
+        }
+
+        public function addMark(Marks $marks): self
+        {
+            if (!$this->marks->contains($marks)) {
+                $this->marks[] = $marks;
+                $marks->setRecipe($this);
+            }
+
+            return $this;
+        }
+
+        public function removeMark(Marks $marks): self
+        {
+            if ($this->marks->removeElement($marks)) {
+                // set the owning side to null (unless already changed)
+                if ($marks->getRecipe() === $this) {
+                    $marks->setRecipe(null);
+                }
+            }
+
+            return $this;
+        }
+
+        // Average Marks
+        public function getAverage(): float
+        {
+            $marks = $this->marks;
+            if ($marks->toArray() === []) {
+                # code...
+                $this->average = null;
+                return $this->average;
+            }
+
+            $total=0;
+            foreach ($marks as $mark) {
+                # code...
+                $total += $mark->getMark();
+            }
+
+            $this->average = $total /count($marks);
+            return $this->average;
+        }
+
+
 
 }

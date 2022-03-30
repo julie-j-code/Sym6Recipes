@@ -20,7 +20,9 @@
             <p class="card-text">{{ favoris.description|slice(0, 100) ~ '...' }}</p>
         </div>
         <div class="card-footer text-muted">
-            <a href="{{ path('recipes_show', {id: favoris.id}) }}">Voir les détails</a>
+            <a class="card-link" href="{{ path('recipes_show', {id: favoris.id}) }}">Voir les détails</a>
+            <a class="card-link" href="{{ path('recipes_remove_favoris', {id: favoris.id}) }}">Supprimer des favoris</a>
+
 
         </div>
 

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UsersController!{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+    <h1>{{ controller_name }}! ✅</h1>
+
+    <div class="mt-5">
+
+        {% set user = app.user %}
+
+
+        <div class="card border-primary w-75">
+            <div class="card-header">Idenfiant :{{ user.id }}</div>
+            <div class="card-body">
+                <h4 class="card-title">
+                    {{user.fullName}}
+                </h4>
+                <p class="card-text">email : {{ user.email }}</p>
+            </div>
+        </div>
+
+        <div class="card border-primary my-5 w-75">
+            <div class="card-header">Vos recettes</div>
+            <div class="card-body">
+                <p class="card-text">
+                    <a href="{{ path('recipes_index') }}"> Créations</a> : {{ user.recipes|length }}
+                </p>
+                {# <p class="card-text">{% for items in user.recipes %}
+                    {{items.name}}
+                    {% endfor %}</p> #}
+                <p class="card-text">
+                    <a href="{{ path('users_show_favoris') }}"> Favoris</a> : {{ user.favorites|length }}
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+
+    {% endblock %}

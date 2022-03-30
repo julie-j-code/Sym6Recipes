@@ -3,70 +3,78 @@
 {% block title %}Recipes index{% endblock %}
 
 {% block body %}
-    <h1>{{controller_name}} ✅</h1>
+<h1>{{controller_name}} ✅</h1>
 
-    <table class="table mt-5">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Time</th>
-                <th>NbPeople</th>
-                <th>Difficulty</th>
-                <th>Description</th>
-                <th>Ingredients</th>
-                <th>Price</th>
-                <th>CreatedAt</th>
-                {# <th>UpdatedAt</th> #}
-                <th>IsFavorite</th>
-                <th>actions</th>
 
-            </tr>
-        </thead>
-        <tbody>
+<table class="table mt-5">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Time</th>
+            <th>NbPeople</th>
+            <th>Difficulty</th>
+            <th>Description</th>
+            <th>Ingredients</th>
+            <th>Price</th>
+            <th>CreatedAt</th>
+            {# <th>UpdatedAt</th> #}
+            <th>IsFavorite</th>
+            <th>actions</th>
+
+        </tr>
+    </thead>
+    <tbody>
         {% for recipe in recipes %}
-            <tr>
-                <td>{{ recipe.id }}</td>
-                <td>{{ recipe.name }}</td>
-                <td>{{ recipe.time }}</td>
-                <td>{{ recipe.nbPeople }}</td>
-                <td>{{ recipe.difficulty }}</td>
-                <td>{{ recipe.description }}</td>
-                <td>
-{# {% for i in ingredients %}
-{% if i is same as recipe.ingredients %}
-{{i.name}}
-{% endif %}    
-{% endfor %} #}
-{% for i in recipe.ingredients %}
-
-{{i.name}}
-   
-{% endfor %}
-                                        
+        
+       
 
 
-                </td>
-                <td>{{ recipe.price }}</td>
-                <td>{{ recipe.createdAt ? recipe.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ recipe.updatedAt ? recipe.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                {# <td>{{ recipe.isFavorite ? 'Yes' : 'No' }}</td> #}
-                <td>
-                    <a href="{{ path('recipes_show', {'id': recipe.id}) }}">show</a>
-                    <a href="{{ path('recipes_edit', {'id': recipe.id}) }}">edit</a>
-                </td>
-            </tr>
+        <tr>
+            <td>{{ recipe.id }} Utilisateur asocié comme auteur : {{ recipe.user.id }} utilisateur actif {{app.user.id}}</td>
+            <td>{{ recipe.name }}</td>
+            <td>{{ recipe.time }}</td>
+            <td>{{ recipe.nbPeople }}</td>
+            <td>{{ recipe.difficulty }}</td>
+            <td>{{ recipe.description }}</td>
+            <td>
+                {# {% for i in ingredients %}
+                {% if i is same as recipe.ingredients %}
+                {{i.name}}
+                {% endif %}
+                {% endfor %} #}
+                {% for i in recipe.ingredients %}
+
+                {{i.name}}
+
+                {% endfor %}
+
+
+
+            </td>
+            <td>{{ recipe.price }}</td>
+            <td>{{ recipe.createdAt ? recipe.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            <td>{{ recipe.updatedAt ? recipe.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            {# <td>{{ recipe.isFavorite ? 'Yes' : 'No' }}</td> #}
+            <td>
+                <a href="{{ path('recipes_show', {'id': recipe.id}) }}">show</a>
+                <a href="{{ path('recipes_edit', {'id': recipe.id}) }}">edit</a>
+            </td>
+        </tr>
+        
         {% else %}
-            <tr>
-                <td colspan="11">no records found</td>
-            </tr>
+        <tr>
+            <td colspan="11">no records found</td>
+        </tr>
+
         {% endfor %}
-        </tbody>
-    </table>
-    <div class="mt-3">
+    </tbody>
+</table>
 
-        {{ knp_pagination_render(recipes, 'base/pagination.html.twig') }}
-    </div>
+<div class="mt-3">
 
-    <a class="btn btn-primary my-3" href="{{ path('recipes_new') }}">Create new</a>
+    {{ knp_pagination_render(recipes, 'base/pagination.html.twig') }}
+</div>
+
+<a class="btn btn-primary my-3" href="{{ path('recipes_new') }}">Create new</a>
 {% endblock %}

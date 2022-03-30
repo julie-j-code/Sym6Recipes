@@ -37,10 +37,20 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Recipes::class, mappedBy: 'favorite')]
     private $favorites;
 
+    #[ORM\Column(type: 'string', length: 100)]
+    private $fullName;
+
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
+    private $pseudo;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Marks::class, orphanRemoval: true)]
+    private $marks;
+
     public function __construct()
     {
         $this->recipes = new ArrayCollection();
         $this->favorites = new ArrayCollection();
+        $this->recipe = new ArrayCollection();
     }
 
     // #[ORM\ManyToMany(targetEntity: Ingredients::class, inversedBy: 'users')]
@@ -219,6 +229,38 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function getFullName(): ?string
+    {
+        return $this->fullName;
+    }
+
+    public function setFullName(string $fullName): self
+    {
+        $this->fullName = $fullName;
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(?string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Marks>
+     */
+    public function getMarks(): Collection
+    {
+        return $this->marks;
     }
 
 }

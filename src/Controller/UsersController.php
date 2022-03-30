@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UsersController extends AbstractController
 {
     #[Route('/', name: 'index')]
+    
     public function index(UsersRepository $repo): Response
     {
         $users = $repo->findAll();
@@ -25,15 +26,22 @@ class UsersController extends AbstractController
         ]);
     }
 
+    #[Route('/profile', name: 'profile', methods: ['GET'])]
+    public function profile(UsersRepository $repo, RecipesRepository $recipesRepository): Response
+    {
+        // $ingredients=$recipesRepository->find('ingredients');
+        // $userRecipes=$repo->find('recipes');
+        
+        return $this->render('users/profile.html.twig', [
+            // on récupèrera l'utilisateur actif
+            'controller_name' => 'Votre profil utilisateur',
+        ]);
+    }
+
     #[Route('/favoris', name: 'show_favoris', methods: ['GET'])]
     public function favoris(RecipesRepository $repo, PaginatorInterface $paginator, Request $request): Response
     {
         $user = $this->getUser();
-        // $user = $paginator->paginate(
-        //     $data, // Requête contenant les données à paginer (ici nos articles)
-        //     $request->query->getInt('page', 1), // Numéro de la page en cours, passé dans l'URL, 1 si aucune page
-        //     8 // Nombre de résultats par page
-        // );
         $recipes = $repo->findAll();
         return $this->render('users/users_favoris.html.twig', [
             // on récupèrera l'utilisateur actif

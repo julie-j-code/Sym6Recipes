@@ -5,6 +5,8 @@
 {% block body %}
     <h1>{{controller_name}}</h1>
 
+
+
     <table class="table">
         <tbody>
             <tr>
@@ -12,19 +14,23 @@
                 <td>{{ recipe.id }}</td>
             </tr>
             <tr>
-                <th>Name</th>
+                <th>Moyenne des votes</th>
+                <td>{{ recipe.average }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
                 <td>{{ recipe.Name }}</td>
             </tr>
             <tr>
-                <th>Time</th>
+                <th>Temps de préparation</th>
                 <td>{{ recipe.time }}</td>
             </tr>
             <tr>
-                <th>NbPeople</th>
+                <th>Nombre de personnes</th>
                 <td>{{ recipe.nbPeople }}</td>
             </tr>
             <tr>
-                <th>Difficulty</th>
+                <th>Difficulté</th>
                 <td>{{ recipe.difficulty }}</td>
             </tr>
             <tr>
@@ -32,7 +38,7 @@
                 <td>{{ recipe.description }}</td>
             </tr>
             <tr>
-                <th>Price</th>
+                <th>Budget</th>
                 <td>{% if recipe.price %}                    
                     {{ recipe.price }}
                     {% else %}
@@ -46,11 +52,11 @@
                 </td>
             </tr>
             <tr>
-                <th>CreatedAt</th>
+                <th>Publiée le :</th>
                 <td>{{ recipe.createdAt ? recipe.createdAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>UpdatedAt</th>
+                <th>Mise à jour le :</th>
                 <td>{{ recipe.updatedAt ? recipe.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             {# <tr>
@@ -60,9 +66,14 @@
         </tbody>
     </table>
 
+    <div class="mark">
+        {{ form(form) }}
+    </div>
+
+
     <a class="btn btn-info mt-3" href="{{ path('recipes_index') }}">back to list</a>
 
-    <a class="btn btn-info my-3" href="{{ path('recipes_edit', {'id': recipe.id}) }}">edit</a>
+    <a class="btn btn-info mt-3" href="{{ path('recipes_edit', {'id': recipe.id}) }}">edit</a>
 
     {{ include('recipes/_delete_form.html.twig') }}
 {% endblock %}
