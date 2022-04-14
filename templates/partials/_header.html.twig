@@ -1,36 +1,54 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">Navbar</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-  
-      <div class="collapse navbar-collapse" id="navbarColor01">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link{% if app.request.get('_route') == 'app_home' %} active {% endif %}" href="{{path('app_home')}}">Accueil
-              <span class="visually-hidden">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link{% if app.request.get('_route') == 'recipes_public' %} active {% endif %}" href="{{path('recipes_public')}}">Recettes</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle{% if app.request.get('_route') starts with 'users_' %} active {% endif %}" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Utilisateur</a>
-            <div class="dropdown-menu">
-              <a class="dropdown-item" href="{{path('app_register')}}">S'enregistrer</a>
-              <a class="dropdown-item" href="{{path('app_login')}}">S'identifier</a>
-              <a class="dropdown-item" href="{{path('app_logout')}}">Se déconnecter</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{{path('users_show_favoris')}}">Vos favoris</a>
-              {# <a class="dropdown-item" href="{{path('users_show_favoris')}}">Separated link</a> #}
-            </div>
-          </li>
-        </ul>
-        <form class="d-flex">
-          <input class="form-control me-sm-2" type="text" placeholder="Search">
-          <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-        </form>
-      </div>
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+      aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarColor01">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link{% if app.request.get('_route') == 'app_home' %} active {% endif %}"
+            href="{{path('app_home')}}">Accueil
+            <span class="visually-hidden">(current)</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link{% if app.request.get('_route') == 'recipes_public' %} active {% endif %}"
+            href="{{path('recipes_public')}}">Recettes</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle{% if app.request.get('_route') starts with 'users_' %} active {% endif %}"
+            data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Utilisateur</a>
+          <div class="dropdown-menu">
+            {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+            <a class="dropdown-item" href="{{path('app_register')}}">S'enregistrer</a>
+            <a class="dropdown-item" href="{{path('app_login')}}">S'identifier</a>
+            {% elseif is_granted('IS_AUTHENTICATED_FULLY') %}
+            <a class="dropdown-item" href="{{path('app_logout')}}">Se déconnecter</a>
+            {% endif %}
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{path('users_profile')}}">Votre Profil</a>
+            <a class="dropdown-item" href="{{path('recipes_index')}}">Vos Recettes</a>
+            <a class="dropdown-item" href="{{path('users_show_favoris')}}">Vos favoris</a>
+            {# <a class="dropdown-item" href="{{path('users_show_favoris')}}">Separated link</a> #}
+          </div>
+        </li>
+        {# partie admin #}
+        {% if is_granted('ROLE_ADMIN') %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button"
+            aria-haspopup="true" aria-expanded="false">Admin</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="{{path('ingredients_index')}}">Gestion des ingrédients</a>
+            <a class="dropdown-item" href="#">Gestion des utilisateurs</a>
+            <a class="dropdown-item" href="#">Gestion des remises</a>
+
+        </li>
+        {% endif %}
+        {# fin admin #}
+      </ul>
     </div>
-  </nav>
+  </div>
+</nav>

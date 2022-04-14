@@ -72,11 +72,11 @@ class RecipesController extends AbstractController
         $recipe = new Recipes();
         $form = $this->createForm(RecipesType::class, $recipe);
         $form->handleRequest($request);
+        $user = $this->getUser();
 
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-
+            $recipe->setUser($user)->getId();
             $recipesRepository->add($recipe);
             return $this->redirectToRoute('recipes_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -150,7 +150,7 @@ class RecipesController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'delete', methods: ['POST'])]
     #[Security("is_granted('ROLE_USER') and user === recipe.getUser()")]
     public function delete(Request $request, Recipes $recipe, RecipesRepository $recipesRepository): Response
     {

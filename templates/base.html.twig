@@ -9,7 +9,8 @@
     {% block stylesheets %}
     <link rel="stylesheet" href="https://bootswatch.com/5/united/bootstrap.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    {# <link rel="stylesheet" href="https://bootswatch.com/_vendor/font-awesome/css/font-awesome.min.css"> #}
+    {#
+    <link rel="stylesheet" href="https://bootswatch.com/_vendor/font-awesome/css/font-awesome.min.css"> #}
     {% endblock %}
     {% block javascripts %}
     <script src="https://bootswatch.com/_vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -21,11 +22,12 @@
     {{ include('/partials/_header.html.twig') }}
     {% endblock%}
     <div class="container mt-5">
-        {% for message in app.flashes('success') %}
+        {# {% for message in app.flashes('success') %}
         <div class="alert alert-success">
             {{ message }}
         </div>
-    {% endfor %}
+        {% endfor %} #}
+        {% include "/partials/_flash.html.twig" %}
         {% block body %}
         {% endblock %}
     </div>

@@ -4,8 +4,7 @@
 
 {% block body %}
 <h1>{{controller_name}} ✅</h1>
-
-
+{% if not recipes is same as([]) %}
 <table class="table mt-5">
     <thead>
         <tr>
@@ -38,11 +37,7 @@
             <td>{{ recipe.difficulty }}</td>
             <td>{{ recipe.description }}</td>
             <td>
-                {# {% for i in ingredients %}
-                {% if i is same as recipe.ingredients %}
-                {{i.name}}
-                {% endif %}
-                {% endfor %} #}
+
                 {% for i in recipe.ingredients %}
 
                 {{i.name}}
@@ -57,8 +52,8 @@
             <td>{{ recipe.updatedAt ? recipe.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
             {# <td>{{ recipe.isFavorite ? 'Yes' : 'No' }}</td> #}
             <td>
-                <a href="{{ path('recipes_show', {'id': recipe.id}) }}">show</a>
-                <a href="{{ path('recipes_edit', {'id': recipe.id}) }}">edit</a>
+                <a class="btn btn-primary mb-3" href="{{ path('recipes_show', {'id': recipe.id}) }}">show</a>
+                <a class="btn btn-warning mg-3" href="{{ path('recipes_edit', {'id': recipe.id}) }}">edit</a>
             </td>
         </tr>
         
@@ -75,6 +70,11 @@
 
     {{ knp_pagination_render(recipes, 'base/pagination.html.twig') }}
 </div>
+
+{% else %}
+<p>Il n'y a pas encore de recette</p>
+    
+{% endif %}
 
 <a class="btn btn-primary my-3" href="{{ path('recipes_new') }}">Create new</a>
 {% endblock %}

@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class RecipesType extends AbstractType
 {
@@ -52,6 +53,7 @@ class RecipesType extends AbstractType
                 'label' => 'Les ingrédients',
                 'attr' => ['class' => 'd-flex flex-wrap gap-3']
             ])
+            ->add('imageFile', VichImageType::class)
             ->add('submit', SubmitType::class, [
                 'attr' => [
                     'class' => 'btn btn-primary mt-4'

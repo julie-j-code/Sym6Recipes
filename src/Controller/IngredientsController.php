@@ -45,24 +45,7 @@ class IngredientsController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'new', methods: ['GET', 'POST'])]
-    public function new(Request $request, IngredientsRepository $ingredientsRepository): Response
-    {
-        $ingredient = new Ingredients();
-        $form = $this->createForm(IngredientsType::class, $ingredient);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $ingredientsRepository->add($ingredient);
-            return $this->redirectToRoute('ingredients_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('ingredients/new.html.twig', [
-            'ingredient' => $ingredient,
-            'form' => $form,
-        ]);
-    }
-
+   
     #[Route('/{id}', name: 'details', methods: ['GET'])]
     public function show(Ingredients $ingredient): Response
     {
@@ -71,30 +54,5 @@ class IngredientsController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Ingredients $ingredient, IngredientsRepository $ingredientsRepository): Response
-    {
-        $form = $this->createForm(IngredientsType::class, $ingredient);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $ingredientsRepository->add($ingredient);
-            return $this->redirectToRoute('index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('ingredients/edit.html.twig', [
-            'ingredient' => $ingredient,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'delete', methods: ['POST'])]
-    public function delete(Request $request, Ingredients $ingredient, IngredientsRepository $ingredientsRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete' . $ingredient->getId(), $request->request->get('_token'))) {
-            $ingredientsRepository->remove($ingredient);
-        }
-
-        return $this->redirectToRoute('app_ingredients_index', [], Response::HTTP_SEE_OTHER);
-    }
+   
 }

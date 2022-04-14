@@ -14,12 +14,15 @@
             <th scope="col">Nom</th>
             <th scope="col">Prix</th>
             <th scope="col">Date de création</th>
+            <th scope="col">Modifier</th>
+            <th scope="col">Supprimer</th>
             {# <th scope="col">Utilisateur </th> #}
-
-
+                     
         </tr>
     </thead>
     <tbody>
+        {% if not ingredients is same as([]) %}
+    
 
         {% for ingredient in ingredients %}
 
@@ -35,6 +38,13 @@
 
                 {% endfor %}
             </td> #}
+            <td>
+                <a class="btn btn-warning" href="{{ path('admin_ingredient_edit', {'id': ingredient.id}) }}">modifier</a>
+            </td>
+            <td>
+                {{ include('ingredients/_delete_form.html.twig') }}
+                {# <a class="btn btn-danger" href="{{ path('admin_ingredient_delete', {'id': ingredient.id}) }}">supprimer</a> #}
+            </td>
 
         </tr>
         {% endfor %}
@@ -47,6 +57,11 @@
 
     {{ knp_pagination_render(ingredients, 'base/pagination.html.twig') }}
 </div>
+
+{% else %}
+<buton class="btn btn-primary">Ajouter un ingrédient</buton>
+
+{% endif %}
 
 
 

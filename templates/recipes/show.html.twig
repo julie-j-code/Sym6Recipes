@@ -3,68 +3,90 @@
 {% block title %}{{recipe.name}}: détails{% endblock %}
 
 {% block body %}
-    <h1>{{controller_name}}</h1>
+<h1>{{controller_name}}</h1>
+<div class="row mt-5">
+
+
+    {% if recipe.imageName %}
+    <div class="col-5">
+        <img class="img-fluid" src="{{ vich_uploader_asset(recipe, 'imageFile') }}">
+    </div>
+    <div class="col-6">
+        {% else %}
+        <div class="col-10">
+            {% endif %}
 
 
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ recipe.id }}</td>
-            </tr>
-            <tr>
-                <th>Moyenne des votes</th>
-                <td>{{ recipe.average }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ recipe.Name }}</td>
-            </tr>
-            <tr>
-                <th>Temps de préparation</th>
-                <td>{{ recipe.time }}</td>
-            </tr>
-            <tr>
-                <th>Nombre de personnes</th>
-                <td>{{ recipe.nbPeople }}</td>
-            </tr>
-            <tr>
-                <th>Difficulté</th>
-                <td>{{ recipe.difficulty }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ recipe.description }}</td>
-            </tr>
-            <tr>
-                <th>Budget</th>
-                <td>{% if recipe.price %}                    
-                    {{ recipe.price }}
-                    {% else %}
-                    {% set counter = 0 %}                    
-                    {% for ingredient in recipe.ingredients %}
-                    {{ingredient.name}} : {{ingredient.price}} €  <br> 
-                    {% set counter = counter + ingredient.price %}
-                    Coût minimal : {{counter}} €                        
-                    {% endfor %}
-                {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <th>Publiée le :</th>
-                <td>{{ recipe.createdAt ? recipe.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Mise à jour le :</th>
-                <td>{{ recipe.updatedAt ? recipe.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            {# <tr>
-                <th>IsFavorite</th>
-                <td>{{ recipe.isFavorite ? 'Yes' : 'No' }}</td>
-            </tr> #}
-        </tbody>
-    </table>
+            <table class="table ">
+                <tbody>
+                    <tr>
+                        <th>Id</th>
+                        <td>{{ recipe.id }}</td>
+                    </tr>
+                    <tr>
+                        <th>Moyenne des votes</th>
+                        <td>
+                          {% if recipe.average %}
+                               
+                            {{ recipe.average }}
+
+                            {% else %}
+                            Aucun vote pour le moment
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Nom</th>
+                        <td>{{ recipe.Name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Temps de préparation</th>
+                        <td>{{ recipe.time }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nombre de personnes</th>
+                        <td>{{ recipe.nbPeople }}</td>
+                    </tr>
+                    <tr>
+                        <th>Difficulté</th>
+                        <td>{{ recipe.difficulty }}</td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ recipe.description }}</td>
+                    </tr>
+                    <tr>
+                        <th>Budget</th>
+                        <td>{% if recipe.price %}
+                            {{ recipe.price }}
+                            {% else %}
+                            {% set counter = 0 %}
+                            {% for ingredient in recipe.ingredients %}
+                            {{ingredient.name}} : {{ingredient.price}} € <br>
+                            {% set counter = counter + ingredient.price %}
+                            Coût minimal : {{counter}} €
+                            {% endfor %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Publiée le :</th>
+                        <td>{{ recipe.createdAt ? recipe.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Mise à jour le :</th>
+                        <td>{{ recipe.updatedAt ? recipe.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                    </tr>
+                    {# <tr>
+                        <th>IsFavorite</th>
+                        <td>{{ recipe.isFavorite ? 'Yes' : 'No' }}</td>
+                    </tr> #}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 
     <div class="mark">
         {{ form(form) }}
@@ -76,4 +98,4 @@
     <a class="btn btn-info mt-3" href="{{ path('recipes_edit', {'id': recipe.id}) }}">edit</a>
 
     {{ include('recipes/_delete_form.html.twig') }}
-{% endblock %}
+    {% endblock %}
