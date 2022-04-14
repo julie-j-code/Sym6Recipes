@@ -4,14 +4,39 @@
 
 {% block body %}
 
+<h1>Bienvenue sur {{ controller_name }}! ✅</h1>
 
-    <h1>Bienvenue sur {{ controller_name }}! ✅</h1>
+<p class="lead">SymRecipe est une application qui va te permettre de créer des recettes à base d'ingrédients que tu
+    auras toi-même créer. Tu pourras partager tes recettes à la communauté du site, ou bien les garder en privées.</p>
+<hr class="my-4">
+{% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+<p>Pour commencer, rendez-vous sur la <a href="{{ path('app_register') }}" role="button">page d'inscription</a> pour
+    utiliser l'application ou <a href="{{ path('app_login') }}">identifiez-vous</a> pour bénéficier de toutes les
+    fonctionnalités</p>
+{% else %}
+<p>Vous êtes bien authentifié sous l'identifiant {{app.user.email}}</p>
+{% endif %}
+{# apperçu des dernières recettes publiées #}
 
+<div class="d-flex justify-content-left flex-wrap gap-1 mt-5">
+    {% for recipe in recipes %}
+    <div class="card border-primary" style="max-width: 20rem;">
+        <div class="card-header">Recette n°{{ recipe.id }}</div>
+        <div class="card-body">
+            <h4 class="card-title">
+                <a href="{{ path('recipes_show', {id: recipe.id}) }}">{{ recipe.name }}</a>
+            </h4>
+            <p class="card-text">{{ recipe.description|slice(0, 100) ~ '...' }}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Proposée par {{ recipe.user.email }}</li>
+        </ul>
+        <div class="card-footer text-muted">
+            <a class="card-link" href="{{ path('recipes_show', {id: recipe.id}) }}">Détails</a>
+        </div>
+    </div>
 
-        <p class="lead">SymRecipe est une application qui va te permettre de créer des recettes à base d'ingrédients que tu auras toi-même créer. Tu pourras partager tes recettes à la communauté du site, ou bien les garder en privées.</p>
-        <hr class="my-4">
-        <p>Pour commencer, rendez-vous sur la page d'inscription pour utiliser l'application.</p>
-        <a class="btn btn-primary btn-lgz" href="{{ path('app_register') }}" role="button">Inscription</a>
-
+    {% endfor %}
+</div>
 
 {% endblock %}

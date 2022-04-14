@@ -52,13 +52,13 @@ class RecipesRepository extends ServiceEntityRepository
      */
 
 
-    public function findPublicRecipes():array
+    public function findPublicRecipes(?int $nbRecipes):array
     {
         return $this->createQueryBuilder('r')
             ->andWhere('r.isPublic = :val')
             ->setParameter('val', 1)
             ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
+            ->setMaxResults($nbRecipes)
             ->getQuery()
             ->getResult();
     }
