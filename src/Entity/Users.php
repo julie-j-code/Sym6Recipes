@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
@@ -21,12 +22,16 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Assert\Email()]
+    #[Assert\Length(min: 2, max: 180)]
     private $email;
 
     #[ORM\Column(type: 'json')]
-    private $roles = [];
+    #[Assert\NotNull()]
+    private array $roles = [];
 
     #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank()]
     private $password;
 
     #[ORM\Column(type: 'boolean')]
@@ -39,10 +44,13 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private $favorites;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $fullName;
+    #[Assert\NotBlank()]
+    #[Assert\Length(min:2, max:50)]
+    private ?string $fullName;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private $pseudo;
+    #[Assert\Length(min: 2, max: 50)]
+    private ?string $pseudo = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Marks::class, orphanRemoval: true)]
     private $marks;

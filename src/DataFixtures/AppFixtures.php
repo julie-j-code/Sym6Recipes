@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Contact;
 use App\Entity\Ingredients;
 use App\Entity\Marks;
 use App\Entity\Recipes;
@@ -32,7 +33,7 @@ class AppFixtures extends Fixture
             $user = new Users();
             $user->setEmail($faker->email())
                 ->setRoles(['ROLE_USER'])
-                ->setFullName(($faker->firstName().' '.$faker->lastName()))
+                ->setFullName(($faker->firstName() . ' ' . $faker->lastName()))
                 ->setPseudo($faker->word())
                 ->setPassword(
                     $this->passwordEncoder->hashPassword($user, 'secret')
@@ -44,57 +45,69 @@ class AppFixtures extends Fixture
 
 
 
-// Ingredients
-$ingredients = [];
-for ($i = 0; $i < 50; $i++) {
-    $ingredient = new Ingredients();
-    $ingredient->setName($faker->word())
-        ->setPrice(mt_rand(0, 100));
+        // Ingredients
+        $ingredients = [];
+        for ($i = 0; $i < 50; $i++) {
+            $ingredient = new Ingredients();
+            $ingredient->setName($faker->word())
+                ->setPrice(mt_rand(0, 100));
 
-    $ingredients[] = $ingredient;
-    $manager->persist($ingredient);
-}
+            $ingredients[] = $ingredient;
+            $manager->persist($ingredient);
+        }
 
-// Recipes
-$recipes = [];
-for ($j = 0; $j < 25; $j++) {
-    $recipe = new Recipes();
-    $recipe->setName($faker->word())
-        ->setTime(mt_rand(0, 1) == 1 ? mt_rand(1, 1440) : null)
-        ->setNbPeople(mt_rand(0, 1) == 1 ? mt_rand(1, 50) : null)
-        ->setDifficulty(mt_rand(0, 1) == 1 ? mt_rand(1, 5) : null)
-        ->setDescription($faker->text(300))
-        ->setPrice(mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
+        // Recipes
+        $recipes = [];
+        for ($j = 0; $j < 25; $j++) {
+            $recipe = new Recipes();
+            $recipe->setName($faker->word())
+                ->setTime(mt_rand(0, 1) == 1 ? mt_rand(1, 1440) : null)
+                ->setNbPeople(mt_rand(0, 1) == 1 ? mt_rand(1, 50) : null)
+                ->setDifficulty(mt_rand(0, 1) == 1 ? mt_rand(1, 5) : null)
+                ->setDescription($faker->text(300))
+                ->setPrice(mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
 
 
-        // ->setIsFavorite(mt_rand(0, 1) == 1 ? true : false)
-        // ->setFavorite(mt_rand(0, 1) == 1 ? true : false)
-        ->setIsPublic(mt_rand(0,1) ==1 ? true : false)
-        ->setUser($users[mt_rand(0, count($users) - 1)]);
+                // ->setIsFavorite(mt_rand(0, 1) == 1 ? true : false)
+                // ->setFavorite(mt_rand(0, 1) == 1 ? true : false)
+                ->setIsPublic(mt_rand(0, 1) == 1 ? true : false)
+                ->setUser($users[mt_rand(0, count($users) - 1)]);
 
-    for ($k = 0; $k < mt_rand(5, 15); $k++) {
-        $recipe->addFavorite($users[mt_rand(0, count($users) - 1)]);
-        $recipe->addIngredient($ingredients[mt_rand(0, count($ingredients) - 1)]);
+            for ($k = 0; $k < mt_rand(5, 15); $k++) {
+                $recipe->addFavorite($users[mt_rand(0, count($users) - 1)]);
+                $recipe->addIngredient($ingredients[mt_rand(0, count($ingredients) - 1)]);
+            }
+
+            $recipes[] = $recipe;
+
+            $manager->persist($recipe);
+        }
+
+        // Marks
+        foreach ($recipes as $recipe) {
+            for ($i = 0; $i < mt_rand(0, 4); $i++) {
+                # code...
+                $mark = new Marks();
+                $mark->setMark(mt_rand(1, 5))
+                    ->setUser($users[mt_rand(0, count($users) - 1)])
+                    ->setRecipe($recipe);
+
+                $manager->persist($mark);
+            }
+        }
+
+        // Contact
+        for ($i = 0; $i < 5; $i++) {
+            $contact = new Contact();
+            $contact->setFullName($faker->name())
+                ->setEmail($faker->email())
+                ->setSubject('Demande n°' . ($i + 1))
+                ->setMessage($faker->text());
+
+            $manager->persist($contact);
+        }
+
+
+        $manager->flush();
     }
-
-    $recipes[]=$recipe;
-
-    $manager->persist($recipe);
-}
-
-// Marks
-foreach ($recipes as $recipe){
-    for ($i=0; $i < mt_rand(0,4) ; $i++) { 
-        # code...
-        $mark = new Marks();
-        $mark->setMark(mt_rand(1,5))
-        ->setUser($users[mt_rand(0, count($users) -1)])
-        ->setRecipe($recipe);
-
-        $manager->persist($mark);
-    }
-}
-
-$manager->flush();
-}
 }
