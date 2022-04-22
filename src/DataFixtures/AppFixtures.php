@@ -12,15 +12,14 @@ use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Faker\Generator;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
 
     // private Generator $faker;
-    public function __construct(private UserPasswordHasherInterface $passwordEncoder)
-    {
-    }
+    // public function __construct(private UserPasswordHasherInterface $passwordEncoder)
+    // {
+    // }
 
     public function load(ObjectManager $manager): void
     {
@@ -35,9 +34,10 @@ class AppFixtures extends Fixture
                 ->setRoles(['ROLE_USER'])
                 ->setFullName(($faker->firstName() . ' ' . $faker->lastName()))
                 ->setPseudo($faker->word())
-                ->setPassword(
-                    $this->passwordEncoder->hashPassword($user, 'secret')
-                );
+                // ->setPassword(
+                //     $this->passwordEncoder->hashPassword($user, 'secret')
+                // );
+                ->setPlainPassword('password');
 
             $users[] = $user;
             $manager->persist($user);
@@ -66,10 +66,6 @@ class AppFixtures extends Fixture
                 ->setDifficulty(mt_rand(0, 1) == 1 ? mt_rand(1, 5) : null)
                 ->setDescription($faker->text(300))
                 ->setPrice(mt_rand(0, 1) == 1 ? mt_rand(1, 1000) : null)
-
-
-                // ->setIsFavorite(mt_rand(0, 1) == 1 ? true : false)
-                // ->setFavorite(mt_rand(0, 1) == 1 ? true : false)
                 ->setIsPublic(mt_rand(0, 1) == 1 ? true : false)
                 ->setUser($users[mt_rand(0, count($users) - 1)]);
 

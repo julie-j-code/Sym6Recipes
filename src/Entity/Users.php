@@ -3,8 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Recipes;
-use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UsersRepository;
+use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -12,8 +12,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
+
+#[UniqueEntity('email')]
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[ORM\EntityListeners(['App\EntityListener\UserListener'])]
 class Users implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -22,13 +24,26 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Assert\Email()]
+    #[Assert\Length(min: 2, max: 180)]
     private $email;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
+    private ?string $plainPassword = null;
+
     #[ORM\Column(type: 'string')]
-    private $password;
+    #[Assert\NotBlank()]
+    private string $password = 'password';
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Assert\NotNull()]
+    private \DateTimeImmutable $createdAt;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Assert\NotNull()]
+    private \DateTimeImmutable $updatedAt;
 
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
@@ -54,16 +69,9 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->recipes = new ArrayCollection();
         $this->favorites = new ArrayCollection();
-        // $this->recipe = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable;
+        $this->updatedAt = new \DateTimeImmutable();
     }
-
-    // #[ORM\ManyToMany(targetEntity: Ingredients::class, inversedBy: 'users')]
-    // private $ingredients;
-
-    // public function __construct()
-    // {
-    //     $this->ingredients = new ArrayCollection();
-    // }
 
     public function getId(): ?int
     {
@@ -111,8 +119,6 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-
-
     /**
      * @see PasswordAuthenticatedUserInterface
      */
@@ -124,6 +130,27 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+
+ /**
+     * Get the value of plainPassword
+     */
+    public function getPlainPassword()
+    {
+        return $this->plainPassword;
+    }
+
+    /**
+     * Set the value of plainPassword
+     *
+     * @return  self
+     */
+    public function setPlainPassword($plainPassword)
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
@@ -149,34 +176,30 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // /**
-    //  * @return Collection<int, Ingredients>
-    //  */
-    // public function getIngredients(): Collection
-    // {
-    //     return $this->ingredients;
-    // }
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
 
-    // public function addIngredient(Ingredients $ingredient): self
-    // {
-    //     if (!$this->ingredients->contains($ingredient)) {
-    //         $this->ingredients[] = $ingredient;
-    //     }
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
 
-    //     return $this;
-    // }
+        return $this;
+    }
 
-    // public function removeIngredient(Ingredients $ingredient): self
-    // {
-    //     $this->ingredients->removeElement($ingredient);
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
 
-    //     return $this;
-    // }
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
 
-    // public function __toString()
-    // {
-    //     return $this->ingredients;
-    // }
+        return $this;
+    }
+
 
     /**
      * @return Collection<int, Recipes>

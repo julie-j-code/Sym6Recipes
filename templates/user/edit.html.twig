@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SymRecipe - Modification de l'utilisateur
+{% endblock %}
+
+{% block body %}
+
+		<h1 class="mt-4">Formulaire de modification des informations de l'utilisateur</h1>
+
+		{# {% for message in app.flashes('warning') %}
+			<div class="alert alert-warning mt-4">
+				{{ message }}
+			</div>
+		{% endfor %} #}
+
+		{{ form(form) }}
+
+	{% endblock %}
