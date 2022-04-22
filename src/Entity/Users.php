@@ -22,16 +22,12 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Assert\Email()]
-    #[Assert\Length(min: 2, max: 180)]
     private $email;
 
     #[ORM\Column(type: 'json')]
-    #[Assert\NotNull()]
-    private array $roles = [];
+    private $roles = [];
 
     #[ORM\Column(type: 'string')]
-    #[Assert\NotBlank()]
     private $password;
 
     #[ORM\Column(type: 'boolean')]
@@ -43,9 +39,8 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Recipes::class, mappedBy: 'favorite')]
     private $favorites;
 
-    #[ORM\Column(type: 'string', length: 100)]
-    #[Assert\NotBlank()]
-    #[Assert\Length(min:2, max:50)]
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    #[Assert\Length(min: 2, max: 50)]
     private ?string $fullName;
 
     #[ORM\Column(type: 'string', length: 50, nullable: true)]
@@ -271,5 +266,4 @@ class Users implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->marks;
     }
-
 }
