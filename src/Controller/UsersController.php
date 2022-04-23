@@ -34,7 +34,7 @@ class UsersController extends AbstractController
         
         return $this->render('users/profile.html.twig', [
             // on récupèrera l'utilisateur actif
-            'controller_name' => 'Votre profilN                                                                                               utilisateur',
+            'controller_name' => 'Votre profil utilisateur',
         ]);
     }
 

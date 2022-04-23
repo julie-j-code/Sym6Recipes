@@ -47,7 +47,6 @@ class UserController extends AbstractController
                     'Les informations de votre compte ont bien été modifiées.'
                 );
 
-
                 return $this->redirectToRoute('app_home');
             } else {
                 $this->addFlash(
@@ -90,6 +89,7 @@ class UserController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            // methode de UserPasswordHasherInterface disponible à retenir !!!!!
             if ($hasher->isPasswordValid($user, $form->getData()['plainPassword'])) {
                 $user->setUpdatedAt(new \DateTimeImmutable());
                 $user->setPlainPassword(
@@ -104,7 +104,7 @@ class UserController extends AbstractController
                 $manager->persist($user);
                 $manager->flush();
 
-                return $this->redirectToRoute('recipes_public');
+                return $this->redirectToRoute('app_home');
             } else {
                 $this->addFlash(
                     'warning',

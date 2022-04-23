@@ -12,6 +12,7 @@ use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\IngredientsRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\AST\Functions\LengthFunction;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -49,8 +50,10 @@ class RecipesController extends AbstractController
     public function indexPublic(RecipesRepository $recipesRepository, PaginatorInterface $paginator, Request $request): Response
     {
 
+        $nbRecipes = count($recipesRepository->findAll());
+        // dd($nbRecipes);
         // $recipes=$recipesRepository->findByIsPublic('1');
-        $data = $recipesRepository->findPublicRecipes();
+        $data = $recipesRepository->findPublicRecipes($nbRecipes);
 
         $recipes = $paginator->paginate(
             $data, // Requête contenant les données à paginer (ici nos articles)
