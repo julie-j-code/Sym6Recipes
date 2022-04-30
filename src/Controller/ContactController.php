@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Form\ContactType;
+use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +20,7 @@ class ContactController extends AbstractController
     public function index(
         Request $request,
         EntityManagerInterface $manager,
-        MailerInterface $mailer
+        MailService $mailer
 
     ): Response {
         $contact = new Contact();
@@ -40,26 +41,22 @@ class ContactController extends AbstractController
             $manager->flush();
 
             //Email
-            $email = (new TemplatedEmail())
-                ->from($contact->getEmail())
-                ->to('jeannet.julie@gmail.com')
-                ->subject($contact->getSubject())
-                ->htmlTemplate('emails/contact.html.twig')
-                ->context([
-                    'contact' => $contact
-                ]);
+            // $email = (new TemplatedEmail())
+            //     ->from($contact->getEmail())
+            //     ->to('jeannet.julie@gmail.com')
+            //     ->subject($contact->getSubject())
+            //     ->htmlTemplate('emails/contact.html.twig')
+            //     ->context([
+            //         'contact' => $contact
+            //     ]);
 
-            $mailer->send($email);
-
-        //     $email = (new Email())
-        //     ->from('hello@example.com')
-        //     ->to('jeannet.julie@gmail.com')
-        //     ->subject('Time for Symfony Mailer!')
-        //     ->text('Sending emails is fun again!')
-        //     ->html('<p>See Twig integration for better HTML integration!</p>');
-
-        // $mailer->send($email);
-            
+            $mailer->sendEmail(
+                $contact->getEmail(),
+                $contact->getSubject(),
+                'emails/contact.html.twig',
+                ['contact'=>$contact],
+                'jeannet.julie@gmail.com'
+            );       
 
             $this->addFlash(
                 'success',
