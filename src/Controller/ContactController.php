@@ -6,6 +6,7 @@ use App\Entity\Contact;
 use App\Form\ContactType;
 use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +21,8 @@ class ContactController extends AbstractController
     public function index(
         Request $request,
         EntityManagerInterface $manager,
-        MailService $mailer
+        MailService $mailer,
+        Recaptcha3Validator $recaptcha3Validator
 
     ): Response {
         $contact = new Contact();
@@ -36,6 +38,7 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $contact = $form->getData();
+            // $score = $recaptcha3Validator->getLastResponse()->getScore();
 
             $manager->persist($contact);
             $manager->flush();
@@ -60,7 +63,7 @@ class ContactController extends AbstractController
 
             $this->addFlash(
                 'success',
-                'Votre demande a été envoyé avec succès !'
+                'Votre demande a été envoyée avec succès !'
             );
 
             return $this->redirectToRoute('app_contact');
@@ -68,6 +71,7 @@ class ContactController extends AbstractController
 
         return $this->render('contact/index.html.twig', [
             'form' => $form->createView(),
+            'controller_name' => 'Nous contacter'
         ]);
     }
 }

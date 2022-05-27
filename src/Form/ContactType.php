@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 
+
 class ContactType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -87,11 +88,14 @@ class ContactType extends AbstractType
                     'class' => 'btn btn-primary mt-4'
                 ],
                 'label' => 'Soumettre ma demande'
-            ])
-            -> add('captcha', Recaptcha3Type::class, [
-                'constraints' => new Recaptcha3(),
-                'action_name' => 'contact'
             ]);
+
+            // There were problems with your captcha. Please try again or contact with support and provide following code(s): "Could not connect to service; Score threshold not met"
+            // ->add('captcha', Recaptcha3Type::class, [
+            //     'constraints' => new Recaptcha3(['message' => 'There were problems with your captcha. Please try again or contact with support and provide following code(s): {{ errorCodes }}']),
+            //     'action_name' => 'contact',
+            // ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void
