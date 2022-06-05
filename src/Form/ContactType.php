@@ -7,13 +7,14 @@ use App\Entity\Contact;
 
 use Symfony\Component\Form\AbstractType;
 use Karser\Recaptcha3Bundle\Form\Recaptcha3Type;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3;
+
 
 
 class ContactType extends AbstractType
@@ -88,14 +89,14 @@ class ContactType extends AbstractType
                     'class' => 'btn btn-primary mt-4'
                 ],
                 'label' => 'Soumettre ma demande'
-            ]);
+            ])
 
             // There were problems with your captcha. Please try again or contact with support and provide following code(s): "Could not connect to service; Score threshold not met"
             // ->add('captcha', Recaptcha3Type::class, [
             //     'constraints' => new Recaptcha3(['message' => 'There were problems with your captcha. Please try again or contact with support and provide following code(s): {{ errorCodes }}']),
-            //     'action_name' => 'contact',
-            // ]);
-
+            //     'action_name' => 'contact'
+            // ])
+            ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

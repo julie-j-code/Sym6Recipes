@@ -6,13 +6,9 @@ use App\Entity\Contact;
 use App\Form\ContactType;
 use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
-use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ContactController extends AbstractController
@@ -21,8 +17,7 @@ class ContactController extends AbstractController
     public function index(
         Request $request,
         EntityManagerInterface $manager,
-        MailService $mailer,
-        Recaptcha3Validator $recaptcha3Validator
+        MailService $mailer
 
     ): Response {
         $contact = new Contact();

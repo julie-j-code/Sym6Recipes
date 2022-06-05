@@ -28,6 +28,17 @@ class AppFixtures extends Fixture
 
         $faker = Faker\Factory::create('fr_FR');
 
+        $admin = new Users();
+        $admin->setFullName('Administrateur de SymRecipe')
+            ->setPseudo(null)
+            ->SetEmail('jeannet.julie@gmail.com')
+            ->setRoles(['ROLE_USER', 'ROLE_ADMIN'])
+            ->setPlainPassword('password');
+
+        $users[] = $admin;
+        $manager->persist($admin);
+
+
         for ($i = 0; $i < 10; $i++) {
             $user = new Users();
             $user->setEmail($faker->email())
